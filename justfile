@@ -79,6 +79,11 @@ put-button-serial:
 button-worker: install-deps
   .venv/bin/python laptop/button_worker.py --port "{{PORT}}" --script "{{BUTTON_SCRIPT}}"
 
+# Read button events and send OSC for Max / TouchDesigner
+[group("examples")]
+button-osc-worker: install-deps
+  .venv/bin/python laptop/button_osc_worker.py --port "{{PORT}}" --script "{{BUTTON_SCRIPT}}"
+
 # Flash firmware, install blink as main.py, then open the REPL
 [group("prep")]
 setup: flash put-blink repl
