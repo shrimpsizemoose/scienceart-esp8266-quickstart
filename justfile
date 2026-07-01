@@ -7,6 +7,9 @@ FIRMWARE := env("FIRMWARE", "firmware/esp8266-micropython.bin")
 UV_CACHE_DIR := env("UV_CACHE_DIR", ".uv-cache")
 SCRIPT := env("SCRIPT", "scripts/10-blink.py")
 BUTTON_SCRIPT := env("BUTTON_SCRIPT", "scripts/50-button-serial.py")
+OSC_HOST := env("OSC_HOST", "127.0.0.1")
+OSC_PORT := env("OSC_PORT", "8000")
+OSC_PATH := env("OSC_PATH", "/esp/button")
 
 _:
   @just --list
@@ -82,7 +85,12 @@ button-worker: install-deps
 # Read button events and send OSC for Max / TouchDesigner
 [group("examples")]
 button-osc-worker: install-deps
-  .venv/bin/python laptop/button_osc_worker.py --port "{{PORT}}" --script "{{BUTTON_SCRIPT}}"
+  .venv/bin/python laptop/button_osc_worker.py --port "{{PORT}}" --script "{{BUTTON_SCRIPT}}" --osc-host "{{OSC_HOST}}" --osc-port "{{OSC_PORT}}" --osc-path "{{OSC_PATH}}"
+
+# Listen for OSC messages with oscdump
+[group("examples")]
+osc-dump:
+  oscdump "{{OSC_PORT}}"
 
 # Flash firmware, install blink as main.py, then open the REPL
 [group("prep")]
